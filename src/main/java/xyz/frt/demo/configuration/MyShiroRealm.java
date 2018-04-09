@@ -43,7 +43,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         System.out.println("Username:" + username);
         System.out.println(authenticationToken.getCredentials());
 
-
+        return null;
     }
 
     @Override
