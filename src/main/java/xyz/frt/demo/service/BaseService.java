@@ -1,27 +1,53 @@
 package xyz.frt.demo.service;
 
+import xyz.frt.demo.common.BaseEntity;
 import xyz.frt.demo.common.JsonResult;
 
+import java.util.List;
 import java.util.Map;
 
-public interface BaseService<T> {
+public interface BaseService<T extends BaseEntity> {
 
-    JsonResult deleteByPrimaryKey(Integer id);
+    Integer deleteByPrimaryKey(Integer id);
 
-    JsonResult insert(T item);
+    Integer insert(T item);
 
-    JsonResult insertSelective(T item);
+    Integer insertSelective(T item);
 
-    JsonResult selectByPrimaryKey(Integer id);
+    T selectByPrimaryKey(Integer id);
 
-    JsonResult updateByPrimaryKeySelective(T item);
+    Integer updateByPrimaryKeySelective(T item);
 
-    JsonResult updateByPrimaryKey(T item);
+    Integer updateByPrimaryKey(T item);
 
-    JsonResult selectAll();
+    List<T> selectAll();
 
-    JsonResult selectByConditions(Map<String, Object> map);
+    List<T> selectAll(String orderBy);
 
-    JsonResult updateByConditions(Map<String, Object> map);
+    List<T> selectByConditions(Map<String, Object> map);
+
+    List<T> selectByConditions(Map<String, Object> map, String orderBy);
+
+    Integer updateByConditions(Map<String, Object> map);
+
+    T selectByUnique(String col, Object value);
+
+    JsonResult removeByPrimaryKey(Integer id);
+
+    JsonResult add(T item);
+
+    JsonResult findByPrimaryKey(Integer id);
+
+    JsonResult upgradeByPrimaryKey(T item);
+
+    JsonResult findAll();
+
+    JsonResult findAll(String orderBy);
+
+    JsonResult findByConditions(Map<String, Object> map, String orderBy);
+
+    JsonResult findByConditions(Map<String, Object> map);
+
+    JsonResult load(String col, Object value);
 
 }

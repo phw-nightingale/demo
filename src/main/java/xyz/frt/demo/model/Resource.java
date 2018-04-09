@@ -1,6 +1,8 @@
 package xyz.frt.demo.model;
 
-public class Resource {
+import xyz.frt.demo.common.BaseEntity;
+
+public class Resource extends BaseEntity {
     private Integer id;
 
     private String name;

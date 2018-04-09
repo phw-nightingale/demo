@@ -1,6 +1,7 @@
 package xyz.frt.demo.service.Impl;
 
 import xyz.frt.demo.common.AppConst;
+import xyz.frt.demo.common.BaseEntity;
 import xyz.frt.demo.common.JsonResult;
 import xyz.frt.demo.dao.BaseMapper;
 import xyz.frt.demo.service.BaseService;
@@ -15,12 +16,11 @@ import java.util.Map;
  * @date Created in 04-08-2018
  * @description
  */
-public abstract class BaseServiceImpl<T> implements BaseService<T> {
+public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
 
-    private BaseMapper<T> baseMapper;
+    public JsonResult jsonResult;
+    public Map<String, Object> dataMap;
 
-    private JsonResult jsonResult;
-    private Map<String, Object> dataMap;
 
     /**
      * 获取对应的Mapper类，由具体业务层实现
@@ -29,14 +29,13 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     public abstract BaseMapper<T> getBaseMapper();
 
     BaseServiceImpl() {
-        baseMapper = getBaseMapper();
         jsonResult = new JsonResult();
         dataMap = new HashMap<>();
     }
 
     @Override
-    public JsonResult deleteByPrimaryKey(Integer id) {
-        Integer result = baseMapper.deleteByPrimaryKey(id);
+    public JsonResult removeByPrimaryKey(Integer id) {
+        Integer result = getBaseMapper().deleteByPrimaryKey(id);
         if (result <= 0) {
             jsonResult = JsonResult.error("错误:删除数据失败.");
         } else {
@@ -46,8 +45,8 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
-    public JsonResult insert(T item) {
-        Integer result = baseMapper.insert(item);
+    public JsonResult add(T item) {
+        Integer result = getBaseMapper().insert(item);
         if (result <= 0) {
             jsonResult = JsonResult.error("错误:插入数据失败.");
         } else {
@@ -57,13 +56,13 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
-    public JsonResult insertSelective(T item) {
+    public Integer insertSelective(T item) {
         return null;
     }
 
     @Override
-    public JsonResult selectByPrimaryKey(Integer id) {
-        T item = baseMapper.selectByPrimaryKey(id);
+    public JsonResult findByPrimaryKey(Integer id) {
+        T item = getBaseMapper().selectByPrimaryKey(id);
         if (BaseUtils.isNullOrEmpty(item)) {
             jsonResult = JsonResult.error("错误:加载对象失败.");
         } else {
@@ -74,18 +73,24 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
-    public JsonResult updateByPrimaryKeySelective(T record) {
+    public Integer updateByPrimaryKeySelective(T item) {
         return null;
     }
 
     @Override
-    public JsonResult updateByPrimaryKey(T record) {
-        return null;
+    public JsonResult upgradeByPrimaryKey(T item) {
+        Integer result = getBaseMapper().updateByPrimaryKey(item);
+        if (result == 0) {
+            jsonResult = JsonResult.error("错误:更新失败.");
+        } else {
+            jsonResult = JsonResult.success("成功更新了1条数据.");
+        }
+        return jsonResult;
     }
 
     @Override
-    public JsonResult selectAll() {
-        List<T> items = baseMapper.selectAll();
+    public JsonResult findAll() {
+        List<T> items = getBaseMapper().selectAll();
         if (BaseUtils.isNullOrEmpty(items)) {
             jsonResult = JsonResult.error("错误:没有匹配的记录.");
         } else {
@@ -96,12 +101,74 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
-    public JsonResult selectByConditions(Map<String, Object> map) {
+    public JsonResult findAll(String orderBy) {
         return null;
     }
 
     @Override
-    public JsonResult updateByConditions(Map<String, Object> map) {
+    public JsonResult findByConditions(Map<String, Object> map) {
+
+        return null;
+    }
+
+    @Override
+    public JsonResult findByConditions(Map<String, Object> map, String orderBy) {
+        return null;
+    }
+
+    @Override
+    public JsonResult load(String col, Object value) {
+        return null;
+    }
+
+    @Override
+    public List<T> selectAll() {
+
+        return null;
+    }
+
+    @Override
+    public List<T> selectAll(String orderBy) {
+        return null;
+    }
+
+    @Override
+    public List<T> selectByConditions(Map<String, Object> map) {
+        return null;
+    }
+
+    @Override
+    public List<T> selectByConditions(Map<String, Object> map, String orderBy) {
+        return null;
+    }
+
+    @Override
+    public Integer deleteByPrimaryKey(Integer id) {
+        return null;
+    }
+
+    @Override
+    public Integer updateByConditions(Map<String, Object> map) {
+        return null;
+    }
+
+    @Override
+    public Integer updateByPrimaryKey(T item) {
+        return null;
+    }
+
+    @Override
+    public Integer insert(T item) {
+        return null;
+    }
+
+    @Override
+    public T selectByPrimaryKey(Integer id) {
+        return null;
+    }
+
+    @Override
+    public T selectByUnique(String col, Object value) {
         return null;
     }
 }

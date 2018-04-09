@@ -37,7 +37,7 @@ public class JsonResult {
      * @return json result
      */
     public static JsonResult success(String msg) {
-        return new JsonResult(200, msg);
+        return new JsonResult(AppConst.RESULT_SUCCESS, msg);
     }
 
     /**
@@ -47,7 +47,7 @@ public class JsonResult {
      * @return json result
      */
     public static JsonResult success(String msg, Map<String, Object> dataMap) {
-        return new JsonResult(200, msg, dataMap);
+        return new JsonResult(AppConst.RESULT_SUCCESS, msg, dataMap);
     }
 
     /**
@@ -56,7 +56,7 @@ public class JsonResult {
      * @return json result
      */
     public static JsonResult error(String msg) {
-        return new JsonResult(500, msg);
+        return new JsonResult(AppConst.RESULT_ERROR, msg);
     }
 
     public Integer getCode() {

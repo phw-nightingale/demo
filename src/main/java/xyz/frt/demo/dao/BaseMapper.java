@@ -1,5 +1,7 @@
 package xyz.frt.demo.dao;
 
+import xyz.frt.demo.common.BaseEntity;
+
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +10,7 @@ import java.util.Map;
  * @date Created in 04-08-2018
  * @description
  */
-public interface BaseMapper<T> {
+public interface BaseMapper<T extends BaseEntity> {
 
     int deleteByPrimaryKey(Integer id);
 
@@ -16,16 +18,20 @@ public interface BaseMapper<T> {
 
     int insertSelective(T item);
 
-    T selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(T record);
-
-    int updateByPrimaryKey(T record);
+    T selectByPrimaryKey(Integer id);;
 
     List<T> selectAll();
 
-    List<T> selectByConditions(Map<String, Object> map);
+    List<T> selectAll(String orderBy);
 
-    int updateByConditions(Map<String, Object> map);
+    int updateByPrimaryKeySelective(T item);
+
+    int updateByPrimaryKey(T item);
+
+    List<T> selectByConditions(Map<String, Object> conditions);
+
+    List<T> selectByConditions(Map<String, Object> conditions, String orderBy);
+
+    int updateByConditions(Map<String, Object> conditions);
 
 }
