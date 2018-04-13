@@ -13,7 +13,6 @@ import xyz.frt.demo.model.User;
 import xyz.frt.demo.service.UserService;
 import xyz.frt.demo.util.BaseUtils;
 
-
 @Service
 @Transactional
 public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {

@@ -7,7 +7,7 @@ public class UserRole extends BaseEntity {
 
     private Integer userId;
 
-    private Integer roleid;
+    private String roleIds;
 
     public Integer getId() {
         return id;
@@ -25,11 +25,11 @@ public class UserRole extends BaseEntity {
         this.userId = userId;
     }
 
-    public Integer getRoleid() {
-        return roleid;
+    public String getRoleIds() {
+        return roleIds;
     }
 
-    public void setRoleid(Integer roleid) {
-        this.roleid = roleid;
+    public void setRoleIds(String roleIds) {
+        this.roleIds = roleIds == null ? null : roleIds.trim();
     }
 }

@@ -2,22 +2,15 @@ package xyz.frt.demo.configuration;
 
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
-import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.crazycake.shiro.RedisManager;
-import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import xyz.frt.demo.common.AppConst;
 import xyz.frt.demo.common.JWTFilter;
-import xyz.frt.demo.service.ResourceService;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
@@ -32,9 +25,9 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Bean
-    public DefaultWebSecurityManager securityManager(MyShiroRealm realm) {
+    public DefaultWebSecurityManager securityManager(MyShiroRealm myShiroRealm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(realm);
+        securityManager.setRealm(myShiroRealm);
 
         /**
          * 关闭shiro自带的session管理
@@ -92,4 +85,8 @@ public class ShiroConfig {
         return advisor;
     }
 
+    @Bean
+    public MyShiroRealm myShiroRealm() {
+        return new MyShiroRealm();
+    }
 }

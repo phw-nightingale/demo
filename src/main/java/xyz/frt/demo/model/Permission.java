@@ -2,16 +2,16 @@ package xyz.frt.demo.model;
 
 import xyz.frt.demo.common.BaseEntity;
 
-public class Resource extends BaseEntity {
+public class Permission extends BaseEntity {
     private Integer id;
 
     private String name;
 
     private String resUrl;
 
-    private Integer type;
+    private String type;
 
-    private Integer parentId;
+    private String description;
 
     public Integer getId() {
         return id;
@@ -37,19 +37,19 @@ public class Resource extends BaseEntity {
         this.resUrl = resUrl == null ? null : resUrl.trim();
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setType(String type) {
+        this.type = type == null ? null : type.trim();
     }
 
-    public Integer getParentId() {
-        return parentId;
+    public String getDescription() {
+        return description;
     }
 
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
     }
 }

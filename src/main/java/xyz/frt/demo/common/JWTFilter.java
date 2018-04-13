@@ -88,6 +88,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             httpServletResponse.setStatus(HttpStatus.OK.value());
             return false;
         }
+        System.out.println("Handle Request...");
         return super.preHandle(request, response);
     }
 

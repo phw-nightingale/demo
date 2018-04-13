@@ -3,11 +3,11 @@
 <mapper namespace="xyz.frt.demo.dao.UserRoleMapper" >
   <resultMap id="BaseResultMap" type="xyz.frt.demo.model.UserRole" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="userId" property="userId" jdbcType="INTEGER" />
-    <result column="roleId" property="roleId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="role_ids" property="roleIds" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, userId, roleId
+    id, user_id, role_ids
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -20,9 +20,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="xyz.frt.demo.model.UserRole" >
-    insert into t_user_role (id, userId, roleId
+    insert into t_user_role (id, user_id, role_ids
       )
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{roleIds,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="xyz.frt.demo.model.UserRole" >
@@ -32,10 +32,10 @@
         id,
       </if>
       <if test="userId != null" >
-        userId,
+        user_id,
       </if>
-      <if test="roleId != null" >
-        roleId,
+      <if test="roleIds != null" >
+        role_ids,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -45,8 +45,8 @@
       <if test="userId != null" >
         #{userId,jdbcType=INTEGER},
       </if>
-      <if test="roleId != null" >
-        #{roleId,jdbcType=INTEGER},
+      <if test="roleIds != null" >
+        #{roleIds,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -54,18 +54,18 @@
     update t_user_role
     <set >
       <if test="userId != null" >
-        userId = #{userId,jdbcType=INTEGER},
+        user_id = #{userId,jdbcType=INTEGER},
       </if>
-      <if test="roleId != null" >
-        roleId = #{roleId,jdbcType=INTEGER},
+      <if test="roleIds != null" >
+        role_ids = #{roleIds,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="xyz.frt.demo.model.UserRole" >
     update t_user_role
-    set userId = #{userId,jdbcType=INTEGER},
-      roleId = #{roleId,jdbcType=INTEGER}
+    set user_id = #{userId,jdbcType=INTEGER},
+      role_ids = #{roleIds,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

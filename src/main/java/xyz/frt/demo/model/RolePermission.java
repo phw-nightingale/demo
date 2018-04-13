@@ -2,12 +2,12 @@ package xyz.frt.demo.model;
 
 import xyz.frt.demo.common.BaseEntity;
 
-public class RoleRes extends BaseEntity {
+public class RolePermission extends BaseEntity {
     private Integer id;
 
     private Integer roleId;
 
-    private Integer resId;
+    private String permissionIds;
 
     public Integer getId() {
         return id;
@@ -25,11 +25,11 @@ public class RoleRes extends BaseEntity {
         this.roleId = roleId;
     }
 
-    public Integer getResId() {
-        return resId;
+    public String getPermissionIds() {
+        return permissionIds;
     }
 
-    public void setResId(Integer resId) {
-        this.resId = resId;
+    public void setPermissionIds(String permissionIds) {
+        this.permissionIds = permissionIds == null ? null : permissionIds.trim();
     }
 }
