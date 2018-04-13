@@ -1,6 +1,8 @@
 package xyz.frt.demo.model;
 
-public class UserRole {
+import xyz.frt.demo.common.BaseEntity;
+
+public class UserRole extends BaseEntity {
     private Integer id;
 
     private Integer userId;
