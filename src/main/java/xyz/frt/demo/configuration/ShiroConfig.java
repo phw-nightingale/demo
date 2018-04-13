@@ -1,7 +1,5 @@
 package xyz.frt.demo.configuration;
 
-import org.apache.shiro.authc.credential.CredentialsMatcher;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
@@ -23,7 +21,6 @@ import xyz.frt.demo.service.ResourceService;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -34,71 +31,53 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
-    @Autowired
-    private ResourceService resourceService;
-
     @Bean
-    public static LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
-        return new LifecycleBeanPostProcessor();
-    }
-
-    /**
-     * ShiroDialect，为了在thymeleaf里使用shiro的标签的bean,
-     * 此处并没有使用thymeleaf，所以暂时不配置
-     */
-
-    @Bean
-    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
-        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-
-        //添加自己的过滤器并取名为jwt
-        Map<String, Filter> filterMap = new HashMap<>();
-        filterMap.put("jwt", new JWTFilter());
-        shiroFilterFactoryBean.setFilters(filterMap);
-        shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setUnauthorizedUrl("/401");
-
-        //自定义的jwt过滤器，所有路径都必须经过jwt过滤器
-        Map<String, String> filterRuleMap = new HashMap<>();
-        filterRuleMap.put("/**", "jwt");
-        filterRuleMap.put("/401", "anon");
-        filterRuleMap.put("/login", "anon");
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
-        return shiroFilterFactoryBean;
-    }
-
-    @Bean
-    public DefaultWebSecurityManager securityManager(MyShiroRealm myShiroRealm) {
-        DefaultWebSecurityManager defaultSecurityManager = new DefaultWebSecurityManager();
-        //设置Realm
-        defaultSecurityManager.setRealm(myShiroRealm);
+    public DefaultWebSecurityManager securityManager(MyShiroRealm realm) {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        securityManager.setRealm(realm);
 
         /**
-         * 使用RESFul时需要关闭Shiro自带的session管理
-         * 详见文档：
+         * 关闭shiro自带的session管理
          * http://shiro.apache.org/session-management.html#SessionManagement-StatelessApplications%28Sessionless%29
          */
         DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
-        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
-        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
-        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
-        defaultSecurityManager.setSubjectDAO(subjectDAO);
+        DefaultSessionStorageEvaluator evaluator = new DefaultSessionStorageEvaluator();
+        evaluator.setSessionStorageEnabled(false);
+        subjectDAO.setSessionStorageEvaluator(evaluator);
+        securityManager.setSubjectDAO(subjectDAO);
 
-        return defaultSecurityManager;
+        return securityManager;
     }
 
-    /**
-     * 开启注解支持
-     * @return
-     */
+    @Bean
+    public ShiroFilterFactoryBean shiroFilter(DefaultWebSecurityManager securityManager) {
+        ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
+
+        //添加自己的过滤器并取名jwt
+        Map<String, Filter> filterMap = new HashMap<>();
+        filterMap.put("jwt", new JWTFilter());
+        filterFactoryBean.setFilters(filterMap);
+        filterFactoryBean.setSecurityManager(securityManager);
+        filterFactoryBean.setUnauthorizedUrl("/401");
+
+        //自定义url规则
+        Map<String, String> filterRuleMap = new HashMap<>();
+        // 所有请求通过自己的JWT Filter
+        filterRuleMap.put("/**", "jwt");
+        // 访问401和404页面不通过我们的Filter
+        filterRuleMap.put("/401", "anon");
+        filterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
+        return filterFactoryBean;
+    }
+
     @Bean
     @DependsOn("lifecycleBeanPostProcessor")
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
-        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
         // 强制使用cglib，防止重复代理和可能引起代理出错的问题
         // https://zhuanlan.zhihu.com/p/29161098
-        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
-        return defaultAdvisorAutoProxyCreator;
+        advisorAutoProxyCreator.setProxyTargetClass(true);
+        return advisorAutoProxyCreator;
     }
 
     @Bean
@@ -106,49 +85,11 @@ public class ShiroConfig {
         return new LifecycleBeanPostProcessor();
     }
 
-    /**
-     *  开启shiro aop注解支持.
-     *  使用代理方式;所以需要开启代码支持;
-     * @param securityManager
-     * @return
-     */
     @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager){
-        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
-        return authorizationAttributeSourceAdvisor;
-    }
-
-    /**
-     * 配置shiro redisManager
-     * 使用的是shiro-redis开源插件
-     * @return
-     */
-    public RedisManager redisManager() {
-        RedisManager redisManager = new RedisManager();
-        redisManager.setHost(AppConst.redis_host);
-        redisManager.setPort(AppConst.redis_port);
-        redisManager.setExpire(AppConst.redis_expire);// 配置缓存过期时间
-        redisManager.setTimeout(AppConst.redis_timeout);
-        redisManager.setPassword(AppConst.redis_pwd);
-        return redisManager;
-    }
-
-    @Bean
-    public RedisSessionDAO redisSessionDAO() {
-        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
-        redisSessionDAO.setRedisManager(redisManager());
-        return redisSessionDAO;
-    }
-
-    /**
-     * shiro session的管理
-     */
-    @Bean
-    public DefaultWebSessionManager sessionManager() {
-        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-        sessionManager.setSessionDAO(redisSessionDAO());
-        return sessionManager;
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(DefaultWebSecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+        advisor.setSecurityManager(securityManager);
+        return advisor;
     }
 
 }

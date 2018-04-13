@@ -20,7 +20,7 @@ public class JWTToken implements AuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return JWTUtil.getUsername(token);
+        return token;
     }
 
     @Override

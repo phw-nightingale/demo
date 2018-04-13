@@ -59,6 +59,16 @@ public class JsonResult {
         return new JsonResult(AppConst.RESULT_ERROR, msg);
     }
 
+    /**
+     * 错误提示
+     * @param code 错误码
+     * @param msg 提示消息
+     * @return json result
+     */
+    public static JsonResult error(Integer code, String msg) {
+        return new JsonResult(code, msg);
+    }
+
     public Integer getCode() {
         return code;
     }
