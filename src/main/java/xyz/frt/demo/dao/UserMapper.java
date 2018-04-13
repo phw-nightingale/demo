@@ -2,7 +2,7 @@ package xyz.frt.demo.dao;
 
 import xyz.frt.demo.model.User;
 
-public interface UserMapper extends BaseMapper<User> {
+public interface UserMapper {
     int deleteByPrimaryKey(Integer id);
 
     int insert(User record);

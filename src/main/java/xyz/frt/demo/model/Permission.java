@@ -1,8 +1,6 @@
 package xyz.frt.demo.model;
 
-import xyz.frt.demo.common.BaseEntity;
-
-public class Permission extends BaseEntity {
+public class Permission {
     private Integer id;
 
     private String name;

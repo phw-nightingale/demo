@@ -8,6 +8,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import xyz.frt.demo.common.JWTToken;
 import xyz.frt.demo.common.JWTUtil;
 import xyz.frt.demo.model.User;
@@ -19,7 +20,7 @@ import xyz.frt.demo.service.UserService;
  * @date Created in 04-08-2018
  * @description
  */
-@Component
+@Service
 public class MyShiroRealm extends AuthorizingRealm {
 
     @Autowired

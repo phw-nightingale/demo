@@ -2,7 +2,7 @@ package xyz.frt.demo.dao;
 
 import xyz.frt.demo.model.Permission;
 
-public interface PermissionMapper extends BaseMapper<Permission> {
+public interface PermissionMapper {
     int deleteByPrimaryKey(Integer id);
 
     int insert(Permission record);

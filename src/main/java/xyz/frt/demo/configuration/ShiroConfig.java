@@ -85,8 +85,4 @@ public class ShiroConfig {
         return advisor;
     }
 
-    @Bean
-    public MyShiroRealm myShiroRealm() {
-        return new MyShiroRealm();
-    }
 }
